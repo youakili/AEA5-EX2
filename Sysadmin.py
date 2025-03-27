@@ -59,11 +59,45 @@ def seleccionar_directori_eliminar():
 
 # Funció per obtenir informació del sistema
 def obtenir_info_sistema():
-    pass
+    try:
+        # Informació del sistema operatiu
+        sistema_operatiu = os.name
+        info = f"Sistema operatiu: {sistema_operatiu}\n"
+        
+        # Informació de l'espai al disc
+        disc = shutil.disk_usage('/')
+        info += f"Espai al disc:\n"
+        info += f"  Total: {disc.total // (2**30)} GB\n"
+        info += f"  Utilitzat: {disc.used // (2**30)} GB\n"
+        info += f"  Lliure: {disc.free // (2**30)} GB\n"
+        
+        text_info.delete('1.0', tk.END)
+        text_info.insert(tk.END, info)
+    except Exception as e:
+        messagebox.showerror("Error", f"No s'ha pogut obtenir la informació: {e}")
 
 # Funció per executar comandes
 def executar_comanda():
-    pass
+    comanda = entrada_comanda.get()
+    if not comanda:
+        return
+    
+    try:
+        resultat = subprocess.run(comanda, shell=True, 
+                                capture_output=True, 
+                                text=True, 
+                                timeout=30)
+        sortida = f"$ {comanda}\n\n"
+        sortida += f"Sortida:\n{resultat.stdout}\n"
+        if resultat.stderr:
+            sortida += f"Errors:\n{resultat.stderr}\n"
+        
+        text_sortida.delete('1.0', tk.END)
+        text_sortida.insert(tk.END, sortida)
+    except subprocess.TimeoutExpired:
+        messagebox.showerror("Error", "La comanda ha excedit el temps d'espera")
+    except Exception as e:
+        messagebox.showerror("Error", f"Error en executar la comanda: {e}")
 
 # Funció per crear còpies de seguretat
 def crear_backup():
