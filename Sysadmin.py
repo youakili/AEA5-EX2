@@ -101,11 +101,29 @@ def executar_comanda():
 
 # Funció per crear còpies de seguretat
 def crear_backup():
-    pass
+    if not 'directori_backup' in globals() or not directori_backup:
+        messagebox.showerror("Error", "Primer seleccioneu un directori")
+        return
+    
+    fitxer_desti = filedialog.asksaveasfilename(
+        defaultextension=".zip",
+        filetypes=[("Fitxer ZIP", "*.zip")]
+    )
+    if not fitxer_desti:
+        return
+    
+    try:
+        shutil.make_archive(fitxer_desti.replace('.zip', ''), 'zip', directori_backup)
+        messagebox.showinfo("Èxit", f"Còpia de seguretat creada a:\n{fitxer_desti}")
+    except Exception as e:
+        messagebox.showerror("Error", f"Error en crear la còpia: {e}")
 
 # Funció per seleccionar directori per còpia de seguretat
 def seleccionar_directori_backup():
-    pass
+    global directori_backup
+    directori_backup = filedialog.askdirectory()
+    if directori_backup:
+        etiqueta_backup.config(text=f"Directori seleccionat: {directori_backup}")
 
 # Configuració de la finestra principal
 finestra = tk.Tk()
