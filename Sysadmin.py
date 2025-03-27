@@ -7,15 +7,55 @@ import subprocess
 
 # Funció per llistar fitxers i directoris 
 def llistar_fitxers():
-    pass
+    directori = filedialog.askdirectory()
+    if directori:
+        llista_fitxers.delete('1.0', tk.END)
+        try:
+            with os.scandir(directori) as entrades:
+                for entrada in entrades:
+                    nom = entrada.name
+                    tipus = "Directori" if entrada.is_dir() else "Fitxer"
+                    mida = entrada.stat().st_size
+                    data = datetime.datetime.fromtimestamp(
+                        entrada.stat().st_mtime).strftime('%Y-%m-%d %H:%M:%S')
+                    linia = f"{nom} ({tipus}) - {mida} bytes - Modificat: {data}\n"
+                    llista_fitxers.insert(tk.END, linia)
+        except Exception as e:
+            messagebox.showerror("Error", f"No s'ha pogut llistar el directori: {e}")
 
 # Funció per eliminar fitxers antics
 def eliminar_fitxers_antics():
-    pass
+    if not 'directori_eliminar' in globals() or not directori_eliminar:
+        messagebox.showerror("Error", "Primer seleccioneu un directori")
+        return
+    
+    try:
+        dies = int(entrada_dies.get())
+    except ValueError:
+        messagebox.showerror("Error", "Introduïu un nombre vàlid de dies")
+        return
+    
+    data_limit = datetime.datetime.now() - datetime.timedelta(days=dies)
+    eliminats = 0
+    
+    try:
+        with os.scandir(directori_eliminar) as entrades:
+            for entrada in entrades:
+                if entrada.is_file():
+                    data_modificacio = datetime.datetime.fromtimestamp(entrada.stat().st_mtime)
+                    if data_modificacio < data_limit:
+                        os.remove(entrada.path)
+                        eliminats += 1
+        messagebox.showinfo("Èxit", f"S'han eliminat {eliminats} fitxers")
+    except Exception as e:
+        messagebox.showerror("Error", f"Error en eliminar fitxers: {e}")
 
 # Funció per seleccionar directori per eliminar fitxers
 def seleccionar_directori_eliminar():
-    pass
+    global directori_eliminar
+    directori_eliminar = filedialog.askdirectory()
+    if directori_eliminar:
+        etiqueta_eliminar.config(text=f"Directori seleccionat: {directori_eliminar}")
 
 # Funció per obtenir informació del sistema
 def obtenir_info_sistema():
@@ -27,7 +67,7 @@ def executar_comanda():
 
 # Funció per crear còpies de seguretat
 def crear_backup():
-   pass
+    pass
 
 # Funció per seleccionar directori per còpia de seguretat
 def seleccionar_directori_backup():
