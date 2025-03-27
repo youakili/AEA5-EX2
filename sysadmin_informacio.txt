@@ -1,0 +1,19 @@
+Sysadmin es un programa de Python que va ser creat per Yassine.
+
+Es un programa que es divideix en multiples pestanyes. 
+Cada pestanya te diferents funcions:
+
+1. Llistar Fitxer:
+  - Serveix per llistar fitxers d'un directori.
+  - Mostra nom, tipus, mida, data entrada i modificació, etc.
+
+2. Eliminar fitxers:
+  - Serveix per eliminar fitxers/directoris d'un directori escullint la antigüitat del fitxer/directori seleccionat.
+
+3. Informació del Sistema:
+  - Mostra el nom del sistema Operatiu i l'espai del disc dur (Tota, Utilitzar i Lliure)
+
+4. Executar Comandes:
+  - Executa comandes que s'afegeixen
+
+5. Crea un backup al comprimir el directori seleccionat.
